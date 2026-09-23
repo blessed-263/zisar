@@ -1,3 +1,5 @@
+"use client";
+
 import { type Icon, Check, Clock, FilePlus as FilePlus2, Question as HelpCircle, Lock, ChatText as MessageSquare, ArrowCounterClockwise as RotateCcw, Scales as Scale, X } from "@phosphor-icons/react";
 import type { TimelineEvent } from "@/lib/types";
 import { cn, formatDateTime } from "@/lib/utils";

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { type Icon, AddressBook as BookUser, CreditCard, Certificate as FileBadge, File as FileCheck2, FileText, Heartbeat as HeartPulse, IdentificationCard as IdCard, Buildings as Landmark, MapPin, Airplane as Plane, Scroll as ScrollText, ShieldPlus, Stamp } from "@phosphor-icons/react";
 import type { DocType, DocumentVersion } from "@/lib/types";

@@ -1,3 +1,5 @@
+"use client";
+
 import { Check } from "@phosphor-icons/react";
 import type { Election } from "@/lib/types";
 import { ELECTION_STAGES } from "@/lib/selectors";

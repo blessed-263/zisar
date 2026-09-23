@@ -1,3 +1,5 @@
+"use client";
+
 import { type Icon, Warning as AlertTriangle, Check, Circle as CircleDot, Clock, Hourglass, Lock, PencilSimple as Pencil, Question as HelpCircle, X } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 

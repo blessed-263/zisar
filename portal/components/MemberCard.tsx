@@ -1,3 +1,5 @@
+"use client";
+
 import { Envelope as Mail, UserMinus as UserX } from "@phosphor-icons/react";
 import type { CommitteeSeat, University } from "@/lib/types";
 import { cn, formatDate } from "@/lib/utils";
