@@ -1,0 +1,52 @@
+@media print {
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #18181b !important;
+    font-size: 11pt;
+  }
+
+  [data-print="hide"],
+  nav,
+  header,
+  aside {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+
+  [data-print="page"] {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  [data-print="break"] {
+    break-before: page;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  tr,
+  td,
+  th {
+    break-inside: avoid;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+}

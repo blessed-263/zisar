@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Registration renewal week poster">
+  <rect width="1600" height="900" fill="#F4F1E8"/>
+  <rect x="1060" y="120" width="420" height="560" rx="24" fill="#FFFFFF" stroke="#243891" stroke-width="6"/>
+  <rect x="1120" y="200" width="300" height="24" rx="12" fill="#243891"/>
+  <rect x="1120" y="260" width="240" height="18" rx="9" fill="#C3C9DE"/>
+  <rect x="1120" y="310" width="270" height="18" rx="9" fill="#C3C9DE"/>
+  <rect x="1120" y="360" width="200" height="18" rx="9" fill="#C3C9DE"/>
+  <circle cx="1380" cy="580" r="60" fill="#FDC405"/>
+  <text x="120" y="360" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="600" fill="#243891" letter-spacing="6">KAZAN</text>
+  <text x="120" y="480" font-family="Inter, Arial, sans-serif" font-size="104" font-weight="700" fill="#18181B">Registration week</text>
+  <text x="120" y="580" font-family="Inter, Arial, sans-serif" font-size="48" fill="#52525B">Bring your passport and migration card</text>
+</svg>

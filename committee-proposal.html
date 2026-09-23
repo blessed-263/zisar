@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ZISAR Student Portal — Committee Proposal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #141820;
+      --muted: #5c6570;
+      --line: #d8dde4;
+      --paper: #f7f5f1;
+      --navy: #0c101c;
+      --navy-2: #161c2c;
+      --gold: #e8b006;
+      --gold-deep: #c49205;
+      --surface: #ffffff;
+      --accent-soft: #eef2f8;
+      --success: #1f6b4a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    html, body {
+      background: #e8e4dc;
+      color: var(--ink);
+      font-family: "Manrope", system-ui, sans-serif;
+      font-size: 10.5pt;
+      line-height: 1.45;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 12mm;
+      background: var(--paper);
+      position: relative;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .page:last-child {
+      page-break-after: auto;
+      margin-bottom: 0;
+    }
+
+    @media print {
+      html, body { background: white; }
+      .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+
+    .display {
+      font-family: "Fraunces", Georgia, serif;
+      font-weight: 550;
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+    }
+
+    /* ——— Cover ——— */
+    .cover {
+      background: var(--navy);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 297mm;
+    }
+
+    .cover-stripe {
+      height: 6px;
+      background: linear-gradient(90deg, #0066cc 0 20%, #fff 20% 40%, #ce1126 40% 60%, #ffd200 60% 80%, #000 80% 100%);
+    }
+
+    .cover-top {
+      padding: 28mm 22mm 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .cover-logo {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,.35));
+    }
+
+    .cover-meta {
+      text-align: right;
+      font-size: 8.5pt;
+      color: rgba(255,255,255,.65);
+      line-height: 1.5;
+    }
+
+    .cover-meta strong {
+      color: var(--gold);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 7.5pt;
+    }
+
+    .cover-hero {
+      flex: 1;
+      padding: 36mm 22mm 20mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 150mm;
+    }
+
+    .cover-eyebrow {
+      color: var(--gold);
+      font-size: 8.5pt;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .cover h1 {
+      font-size: 34pt;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    .cover-lead {
+      font-size: 12pt;
+      color: rgba(255,255,255,.78);
+      line-height: 1.55;
+      max-width: 128mm;
+    }
+
+    .cover-foot {
+      padding: 0 22mm 18mm;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      border-top: 1px solid rgba(255,255,255,.12);
+      padding-top: 16px;
+      margin: 0 22mm 18mm;
+    }
+
+    .cover-foot div span {
+      display: block;
+      font-size: 7.5pt;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 4px;
+    }
+
+    .cover-foot div strong {
+      font-size: 9.5pt;
+      font-weight: 600;
+      color: rgba(255,255,255,.9);
+    }
+
+    /* ——— Inner pages ——— */
+    .inner {
+      padding: 18mm 20mm 22mm;
+      min-height: 297mm;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .running {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      font-size: 7.5pt;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .running .mark {
+      color: var(--navy);
+      font-weight: 700;
+    }
+
+    .page-num {
+      color: var(--muted);
+    }
+
+    h2.display {
+      font-size: 20pt;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    h3 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 12.5pt;
+      font-weight: 550;
+      color: var(--navy);
+      margin: 16px 0 6px;
+      letter-spacing: -0.02em;
+    }
+
+    p { margin-bottom: 8px; color: var(--ink); }
+    p.lead {
+      font-size: 11.5pt;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .gold-rule {
+      width: 36px;
+      height: 3px;
+      background: var(--gold);
+      margin: 0 0 14px;
+      border-radius: 2px;
+    }
+
+    ul.clean {
+      list-style: none;
+      margin: 8px 0 12px;
+    }
+
+    ul.clean li {
+      position: relative;
+      padding-left: 14px;
+      margin-bottom: 5px;
+    }
+
+    ul.clean li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 14px;
+      font-size: 9pt;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 7px 9px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--navy);
+      color: #fff;
+      font-weight: 600;
+      font-size: 7.5pt;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    th:first-child { border-radius: 6px 0 0 0; }
+    th:last-child { border-radius: 0 6px 0 0; }
+
+    tr:nth-child(even) td { background: rgba(255,255,255,.55); }
+
+    .tag {
+      display: inline-block;
+      font-size: 7pt;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .tag-core { background: #dceee6; color: var(--success); }
+    .tag-next { background: #fff0cc; color: #8a6a00; }
+    .tag-later { background: var(--accent-soft); color: #3a4a66; }
+    .tag-out { background: #f0e8e8; color: #8a3030; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .cards.three { grid-template-columns: 1fr 1fr 1fr; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .card .label {
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: 4px;
+    }
+
+    .card h4 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 11.5pt;
+      font-weight: 550;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      font-size: 9pt;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .callout {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 14px 0;
+    }
+
+    .callout .label {
+      color: var(--gold);
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .callout p { color: rgba(255,255,255,.85); margin: 0; font-size: 10pt; }
+
+    .checklist {
+      list-style: none;
+      margin: 8px 0;
+    }
+
+    .checklist li {
+      display: flex;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: flex-start;
+    }
+
+    .checklist .box {
+      flex: 0 0 14px;
+      width: 14px;
+      height: 14px;
+      margin-top: 2px;
+      border: 1.5px solid var(--navy);
+      border-radius: 3px;
+    }
+
+    .checklist strong {
+      display: block;
+      font-size: 9.5pt;
+      margin-bottom: 1px;
+    }
+
+    .checklist span {
+      font-size: 8.5pt;
+      color: var(--muted);
+    }
+
+    .phase-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin: 12px 0 16px;
+    }
+
+    .phase {
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .phase.one {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+
+    .phase .n {
+      font-size: 7.5pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .phase.one .n { color: var(--gold); }
+    .phase:not(.one) .n { color: var(--gold-deep); }
+
+    .phase h4 {
+      font-family: "Fraunces", Georgia, serif;
+      font-size: 11pt;
+      margin-bottom: 4px;
+    }
+
+    .phase.one h4 { color: #fff; }
+    .phase p { font-size: 8.5pt; margin: 0; line-height: 1.35; }
+    .phase.one p { color: rgba(255,255,255,.75); }
+    .phase:not(.one) p { color: var(--muted); }
+
+    .footer-note {
+      margin-top: auto;
+      padding-top: 12px;
+      font-size: 7.5pt;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .proto-list {
+      columns: 2;
+      column-gap: 18px;
+      margin: 8px 0 12px;
+      font-size: 9pt;
+    }
+
+    .proto-list li {
+      break-inside: avoid;
+      margin-bottom: 4px;
+      padding-left: 12px;
+      position: relative;
+    }
+
+    .proto-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--success);
+      font-weight: 700;
+      font-size: 8pt;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE 1: Cover -->
+  <section class="page cover">
+    <div class="cover-stripe"></div>
+    <div class="cover-top">
+      <img class="cover-logo" src="portal/public/brand/zisar-logo.png" alt="ZISAR" />
+      <div class="cover-meta">
+        <strong>Solution proposal</strong>
+        23 September 2026<br />
+        For the ZISAR committee
+      </div>
+    </div>
+    <div class="cover-hero">
+      <p class="cover-eyebrow">The solution</p>
+      <h1 class="display">Student records, verification &amp; elections portal</h1>
+      <p class="cover-lead">
+        A single portal where every sponsored student has one file, every semester can be closed,
+        notices reach the right people, and elections are fair — operated by ZISAR for members across Russia.
+      </p>
+    </div>
+    <div class="cover-foot">
+      <div>
+        <span>Prepared for</span>
+        <strong>Zimbabwe Students Association in Russia</strong>
+      </div>
+      <div>
+        <span>Context</span>
+        <strong>Presidential &amp; National Scholarships</strong>
+      </div>
+      <div>
+        <span>Status</span>
+        <strong>Ready to build — prototype live</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 2: Summary -->
+  <section class="page">
+    <div class="inner">
+      <div class="running">
+        <span class="mark">ZISAR · Portal proposal</span>
+        <span class="page-num">02</span>
+      </div>
+      <h2 class="display">1. Executive summary</h2>
+      <div class="gold-rule"></div>
+      <p class="lead">
+        ZISAR already runs a document upload portal. That solves filing. It does not yet give the association
+        a reliable picture of each student, semester by semester.
+      </p>
+      <p>
+        This proposal replaces that filing cabinet with a <strong>student records portal</strong>.
+        Every sponsored student has one profile. Each semester, the student submits results against that profile.
+        A named verifier checks the sheet. Notices — including posters — go to the right city or cohort.
+        Dates that can strand a student in Russia are tracked before they expire.
+      </p>
+      <p>
+        ZISAR remains the operator. The portal keeps the association’s own verified record and can produce
+        reports for the Presidential and National Scholarships Department. It does not, by itself, award,
+        suspend, or pay a scholarship.
+      </p>
+
+      <div class="callout">
+        <div class="label">The solution</div>
+        <p>
+          One portal replaces the document pile and the chat-group work. Phase&nbsp;1 is fully specified
+          and already clickable. Production goes on the association’s own server with a real database,
+          sign-in, file storage, and email.
+        </p>
+      </div>
+
+      <h3>Build in three phases</h3>
+      <div class="phase-bar">
+        <div class="phase one">
+          <div class="n">Phase 1 · Foundation</div>
+          <h4>Daily work, done properly</h4>
+          <p>Profile, documents, semester verification, notices, admin queue, committee register, consent, emergency alert.</p>
+        </div>
+        <div class="phase">
+          <div class="n">Phase 2 · Oversight</div>
+          <h4>Once the roll is real</h4>
+          <p>Coordinators, appeals, semester report, elections ballot, help, travel, guides, mentors, events, graduation.</p>
+        </div>
+        <div class="phase">
+          <div class="n">Phase 3 · Partners</div>
+          <h4>Only with privacy rules</h4>
+          <p>Scholarship liaison login, Telegram delivery, alumni closure, restricted welfare notes.</p>
+        </div>
+      </div>
+
+      <h3>What this portal fixes</h3>
+      <div class="cards">
+        <div class="card">
+          <div class="label">01</div>
+          <h4>Semesters stay open</h4>
+          <p>“Results uploaded” is not “this semester is verified for this student.”</p>
+        </div>
+        <div class="card">
+          <div class="label">02</div>
+          <h4>The file is incomplete</h4>
+          <p>Phone, hostel, visa, and next of kin live in chat — until they don’t.</p>
+        </div>
+        <div class="card">
+          <div class="label">03</div>
+          <h4>Deadlines are manual</h4>
+          <p>Someone has to remember whose registration ends this month.</p>
+        </div>
+        <div class="card">
+          <div class="label">04</div>
+          <h4>Notices get lost</h4>
+          <p>A poster in WhatsApp reaches whoever happens to be online.</p>
+        </div>
+        <div class="card">
+          <div class="label">05</div>
+          <h4>Anecdotes to Harare</h4>
+          <p>The scholarship office cannot see verified counts from one system.</p>
+        </div>
+        <div class="card">
+          <div class="label">06</div>
+          <h4>Committee in a chat</h4>
+          <p>No single page for who holds office — and no fair secret ballot.</p>
+        </div>
+      </div>
+
+      <p class="footer-note">This document sets the product. Scope below is fixed for phase&nbsp;1; later phases follow once the roll is live.</p>
+    </div>
+  </section>
+
+  <!-- PAGE 3: Who + core uses -->
+  <section class="page">
+    <div class="inner">
+      <div class="running">
+        <span class="mark">ZISAR · Portal proposal</span>
+        <span class="page-num">03</span>
+      </div>
+      <h2 class="display">2. Who it is for</h2>
+      <div class="gold-rule"></div>
+      <p class="lead">Prospective students stay on zisar.ru. This portal is for members and the officers who verify them — plus temp accounts for applicants still in Zimbabwe.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:22%">Person</th>
+            <th>What they come to do</th>
+            <th style="width:32%">Must not be able to</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Student</strong></td>
+            <td>Keep their profile true, submit results, read notices, appeal, nominate and vote, ask for help, send an emergency alert</td>
+            <td>See another student’s file, help request, or how anyone voted</td>
+          </tr>
+          <tr>
+            <td><strong>Applicant</strong> <span class="tag tag-next">New</span></td>
+            <td>Join cities, read honest briefs and city news, ask a city representative before travel</td>
+            <td>Open member files, documents, or ballots</td>
+          </tr>
+          <tr>
+            <td><strong>Verifier</strong></td>
+            <td>Open semester windows, check sheets, approve or send back with a reason</td>
+            <td>Delete history, decide their own appeal, run an election they stand in</td>
+          </tr>
+          <tr>
+            <td><strong>Appeals officer</strong></td>
+            <td>Review a contested verification; uphold or return to the queue</td>
+            <td>Be the same person who made the first decision</td>
+          </tr>
+          <tr>
+            <td><strong>Welfare</strong></td>
+            <td>Receive emergency alerts; answer help requests</td>
+            <td>Open the document vault unless also a verifier</td>
+          </tr>
+          <tr>
+            <td><strong>City representative</strong></td>
+            <td>Publish the good / bad / ugly brief, city news, answer applicant questions</td>
+            <td>Verify results or open passport images</td>
+          </tr>
+          <tr>
+            <td><strong>Election officer</strong></td>
+            <td>Run nominations and the secret ballot; publish totals</td>
+            <td>See how a named student voted, or stand as a candidate</td>
+          </tr>
+          <tr>
+            <td><strong>Executive</strong></td>
+            <td>Oversight by city and school, notices, committee cards, semester report, audit log</td>
+            <td>Edit a result a verifier has already signed</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Core of the product (phase 1)</h3>
+      <ul class="clean">
+        <li><strong>One profile</strong> — identity, contacts, scholarship, studies, stay in Russia, emergency contacts, consent.</li>
+        <li><strong>Document vault</strong> — typed uploads with issue and expiry dates; versions kept when resubmitted.</li>
+        <li><strong>Semester verification</strong> — named window, student declaration + sheet, Verified / Query / Rejected with a reason.</li>
+        <li><strong>Notices with posters</strong> — audience by all, city, university, cohort, overdue, or expiring.</li>
+        <li><strong>Elections overview + committee cards</strong> — rules and who holds office now; ballot in phase 2.</li>
+        <li><strong>Emergency alert</strong> — reaches two named welfare officers from the profile phone and city.</li>
+      </ul>
+
+      <div class="callout">
+        <div class="label">Leave out</div>
+        <p>Stipends and bank details · membership card on the phone · housing or job board · automatic reading of Russian transcripts · replacing the Harare scholarship application.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 4: Semester + security -->
+  <section class="page">
+    <div class="inner">
+      <div class="running">
+        <span class="mark">ZISAR · Portal proposal</span>
+        <span class="page-num">04</span>
+      </div>
+      <h2 class="display">3. How a semester closes</h2>
+      <div class="gold-rule"></div>
+      <p class="lead">Verification is per session — autumn or spring — not “whenever a file arrives.” Preparatory faculty is recorded separately from degree years.</p>
+
+      <div class="cards three">
+        <div class="card">
+          <div class="label">Student</div>
+          <h4>Declare &amp; attach</h4>
+          <p>Outcome, arrears if any, official sheet, and a tick that the sheet is theirs for this session.</p>
+        </div>
+        <div class="card">
+          <div class="label">Verifier</div>
+          <h4>Check five things</h4>
+          <p>Right person, right session, declaration matches sheet, file readable, profile complete enough.</p>
+        </div>
+        <div class="card">
+          <div class="label">Outcome</div>
+          <h4>Written reason</h4>
+          <p>Verified closes the semester. Query opens a reply. Rejected allows a fresh submission. No silent rejection.</p>
+        </div>
+      </div>
+
+      <h3>Appeal (phase 2)</h3>
+      <p>
+        Within 14 days of a verified or rejected result, the student appeals to a named officer who did not
+        make the original decision. Both decisions stay on the record. The officer does not type a new mark.
+      </p>
+
+      <h3>Semester report</h3>
+      <p>
+        An executive can produce a report for the scholarship office from verified sessions: name, programme,
+        sessions cleared, arrears, missing documents. No passport images in the default export. The report does
+        not suspend, restore, or pay a scholarship.
+      </p>
+
+      <h2 class="display" style="margin-top:18px">4. Trust &amp; secrecy</h2>
+      <div class="gold-rule"></div>
+      <div class="two-col">
+        <div>
+          <h3 style="margin-top:0">Access</h3>
+          <ul class="clean">
+            <li>Named roles; blocked pages name the rule.</li>
+            <li>Every sensitive opening can be audited.</li>
+            <li>Help requests visible only to welfare.</li>
+            <li>Consent version and date stored at sign-up.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="margin-top:0">Elections</h3>
+          <ul class="clean">
+            <li>Ballot never linked to the voter.</li>
+            <li>Receipt proves the vote, not the choice.</li>
+            <li>Officer and scrutineer are not candidates.</li>
+            <li>City seats voted only by that city’s members.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:16px">
+        <div class="label">Operator</div>
+        <p>
+          ZISAR keeps the verified roll. The Presidential and National Scholarships Department receives a report.
+          The portal does not decide scholarships.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 5: Prototype -->
+  <section class="page">
+    <div class="inner">
+      <div class="running">
+        <span class="mark">ZISAR · Portal proposal</span>
+        <span class="page-num">05</span>
+      </div>
+      <h2 class="display">5. What the committee can click today</h2>
+      <div class="gold-rule"></div>
+      <p class="lead">
+        A working prototype of this proposal is ready. Sample names and documents only. Sign in as any role
+        from the demo switcher. Data stays in the browser until a shared database is connected.
+      </p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="label">Landing</div>
+          <h4>Brand-first entry</h4>
+          <p>Public landing into sign-in. Association blog and city regions for members and applicants.</p>
+        </div>
+        <div class="card">
+          <div class="label">Oversight</div>
+          <h4>Executive analytics</h4>
+          <p>Break down members and semester progress by city, school, home province, cohort, and scholarship.</p>
+        </div>
+        <div class="card">
+          <div class="label">Applicants</div>
+          <h4>Before travel</h4>
+          <p>Temp accounts join cities, read good / bad / ugly briefs, ask city representatives.</p>
+        </div>
+        <div class="card">
+          <div class="label">Ballot</div>
+          <h4>Secret elections</h4>
+          <p>Nominations, voting, receipt, and totals — choices never appear in the audit log.</p>
+        </div>
+      </div>
+
+      <h3>Screens already in the prototype</h3>
+      <ul class="proto-list">
+        <li>Student profile (ten sections) and print view</li>
+        <li>Document vault with versions and expiry</li>
+        <li>Semester submit, query reply, appeal</li>
+        <li>Verifier queue and review desk</li>
+        <li>Notices with posters; events</li>
+        <li>Secretary General blog</li>
+        <li>Committee cards editor</li>
+        <li>Election portal and officer console</li>
+        <li>Welfare alerts, help threads, travel</li>
+        <li>University guides and mentors</li>
+        <li>City regions and applicant enquiries</li>
+        <li>Semester report (print to A4)</li>
+        <li>Audit log</li>
+        <li>Role-based home screens</li>
+      </ul>
+
+      <h3>What is still out of the prototype</h3>
+      <p>
+        Real authentication, shared PostgreSQL, file storage, and email delivery belong to the phase&nbsp;1 production
+        build on the association’s server. The schema for that database is already drafted beside the prototype.
+      </p>
+
+      <div class="callout">
+        <div class="label">Demo path</div>
+        <p>
+          Sign in as Student → submit a semester → switch to Verifier → clear the queue → switch to Executive →
+          open Oversight → switch to Applicant → join a city and read the brief → switch to City representative →
+          answer the enquiry.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 6: Design lock -->
+  <section class="page">
+    <div class="inner">
+      <div class="running">
+        <span class="mark">ZISAR · Portal proposal</span>
+        <span class="page-num">06</span>
+      </div>
+      <h2 class="display">6. How the portal is set up</h2>
+      <div class="gold-rule"></div>
+      <p class="lead">These rules are locked into the design. They keep the product clear for members, officers, and partners.</p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="label">Verification</div>
+          <h4>ZISAR’s own roll</h4>
+          <p>ZISAR verifies submissions and can export a report for the scholarship department. The portal never suspends or pays a scholarship.</p>
+        </div>
+        <div class="card">
+          <div class="label">Document types</div>
+          <h4>Green card stays</h4>
+          <p>The upload type remains. The committee labels the physical paper once; the system already collects it.</p>
+        </div>
+        <div class="card">
+          <div class="label">First semester</div>
+          <h4>Named central verifiers</h4>
+          <p>A small group of named verifiers runs phase&nbsp;1. City coordinators join in phase&nbsp;2 after one window has been completed.</p>
+        </div>
+        <div class="card">
+          <div class="label">Scholarship office</div>
+          <h4>Export first</h4>
+          <p>No department login in phase&nbsp;1. They receive a semester report without passport images. A liaison login is phase&nbsp;3 only.</p>
+        </div>
+        <div class="card">
+          <div class="label">Current portal</div>
+          <h4>Replace my-zisar.online</h4>
+          <p>Phase&nbsp;1 replaces the upload site once live. Running two systems would split the record again.</p>
+        </div>
+        <div class="card">
+          <div class="label">Calendar</div>
+          <h4>Autumn and spring sessions</h4>
+          <p>Windows follow the Russian university calendar. Preparatory faculty has its own window when dates differ.</p>
+        </div>
+        <div class="card">
+          <div class="label">Elections</div>
+          <h4>One-year terms</h4>
+          <p>Enrolled students with a complete profile vote. Quorum is set per election. A tie goes to a runoff. Leave holders may vote and may not stand.</p>
+        </div>
+        <div class="card">
+          <div class="label">Election staff</div>
+          <h4>Officer and scrutineer</h4>
+          <p>Neither is a candidate. Academic verifiers do not inherit the election job.</p>
+        </div>
+        <div class="card">
+          <div class="label">Welfare</div>
+          <h4>Two named officers</h4>
+          <p>Emergency alerts and help requests go to two welfare officers. The appeals officer is never the verifier on that file.</p>
+        </div>
+        <div class="card">
+          <div class="label">Out of scope</div>
+          <h4>Stay out</h4>
+          <p>No stipends, no membership card app, no housing or job board, no automatic transcript reading, no Harare application replacement.</p>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:8px">
+        <div class="label">Production handoff</div>
+        <p>
+          Before go-live, the executive enters the real committee names, appoints the two welfare officers,
+          and names the first verifiers. The product does not wait on further design choices.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 7: Delivery / close -->
+  <section class="page">
+    <div class="inner">
+      <div class="running">
+        <span class="mark">ZISAR · Portal proposal</span>
+        <span class="page-num">07</span>
+      </div>
+      <h2 class="display">7. Delivery</h2>
+      <div class="gold-rule"></div>
+      <p class="lead">
+        The prototype proves the workflows. Phase&nbsp;1 moves the same product onto the association’s server
+        with real accounts, a shared database, file storage, and email.
+      </p>
+
+      <div class="cards">
+        <div class="card">
+          <div class="label">Phase 1</div>
+          <h4>Foundation release</h4>
+          <p>Profile, documents, one semester workflow, notices with images, admin queue, elections overview with sitting committee, consent, emergency alert.</p>
+        </div>
+        <div class="card">
+          <div class="label">Phase 2</div>
+          <h4>After the roll exists</h4>
+          <p>Ballot, help, travel, guides, mentors, events, appeals, semester report, graduation record, coordinators, full applicant city programme.</p>
+        </div>
+      </div>
+
+      <h3>After one academic year on phase 1</h3>
+      <p>The executive will be able to say, without opening a chat group:</p>
+      <ul class="clean">
+        <li>How many enrolled students have a profile</li>
+        <li>For the last autumn and spring sessions: verified, queried, rejected, overdue</li>
+        <li>Which universities have the most overdue submissions</li>
+        <li>Which students have a visa, registration, or insurance date inside 60 days</li>
+        <li>What was announced, to whom, and that a decision notice was sent</li>
+        <li>Who holds each office, and when that term ends</li>
+      </ul>
+
+      <div class="callout" style="margin-top:20px">
+        <div class="label">Hard boundary</div>
+        <p>No stipend module, no public social feed, and no outside partner logins enter this plan.</p>
+      </div>
+
+      <div style="margin-top:28px; padding:20px; border:1px solid var(--line); border-radius:12px; background:var(--surface);">
+        <p style="font-size:8pt; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-deep); font-weight:700; margin-bottom:8px;">Closing</p>
+        <p class="display" style="font-size:16pt; margin-bottom:10px; color:var(--navy);">
+          One portal. One roll. Semesters that close.
+        </p>
+        <p style="color:var(--muted); margin:0; font-size:10pt;">
+          Zimbabwe Students Association in Russia · Student portal proposal · 23 September 2026<br />
+          Full field lists and workflows: <em>ZISAR-Student-Portal-Proposal.md</em>
+        </p>
+      </div>
+
+      <p class="footer-note" style="margin-top:24px;">
+        This PDF is the solution brief for the committee. The long markdown is the technical reference for fields,
+        document types, and election rules.
+      </p>
+    </div>
+  </section>
+
+</body>
+</html>

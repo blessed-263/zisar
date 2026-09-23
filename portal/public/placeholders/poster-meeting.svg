@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="General meeting poster">
+  <rect width="1600" height="900" fill="#243891"/>
+  <rect x="0" y="0" width="1600" height="12" fill="#FDC405"/>
+  <circle cx="1320" cy="180" r="260" fill="#2F46A8"/>
+  <circle cx="1450" cy="760" r="180" fill="#1C2D78"/>
+  <text x="120" y="360" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="600" fill="#FDC405" letter-spacing="6">ZISAR</text>
+  <text x="120" y="480" font-family="Inter, Arial, sans-serif" font-size="110" font-weight="700" fill="#FFFFFF">General meeting</text>
+  <text x="120" y="580" font-family="Inter, Arial, sans-serif" font-size="48" fill="#DDE3F7">All members · Moscow and online</text>
+</svg>

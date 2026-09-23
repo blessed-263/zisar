@@ -1,0 +1,625 @@
+// PostgreSQL schema for the production ZISAR portal.
+// The prototype runs on the seed in lib/seed.ts and does not connect to a database.
+// This file mirrors lib/types.ts so the move to a server is a data move, not a redesign.
+// See docs/MIGRATION.md.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// The connection URL lives in prisma.config.ts (Prisma 7).
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  student
+  applicant
+  rep
+  verifier
+  appeals
+  welfare
+  coordinator
+  executive
+  officer
+}
+
+enum City {
+  Moscow
+  Kazan
+  Belgorod
+  StPetersburg @map("St Petersburg")
+}
+
+enum ScholarshipType {
+  Presidential
+  National
+  Other
+}
+
+enum Level {
+  preparatory
+  bachelor
+  specialist
+  master
+  phd
+}
+
+enum ReviewStatus {
+  received
+  verified
+  queried
+  rejected
+}
+
+enum SubmissionStatus {
+  draft
+  submitted
+  verified
+  queried
+  rejected
+}
+
+enum Outcome {
+  satisfactory
+  arrears
+  unsatisfactory
+}
+
+enum AppealStatus {
+  pending
+  upheld
+  returned
+}
+
+enum ElectionStatus {
+  draft
+  nominations
+  vetting
+  statements
+  voting
+  closed
+  published
+  archived
+}
+
+enum NominationStatus {
+  pending
+  accepted
+  declined
+}
+
+model University {
+  id       String    @id
+  name     String
+  nameRu   String
+  city     City
+  students Student[]
+  guide    Guide?
+}
+
+/// Portal account. A person can hold more than one role (a student can also be a verifier).
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  roles        UserRole[]
+  student      Student?
+  createdAt    DateTime   @default(now())
+  lastSignIn   DateTime?
+}
+
+model UserRole {
+  userId String
+  role   Role
+  /// Coordinators are scoped to a city.
+  city   City?
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, role])
+}
+
+model Student {
+  id            String  @id @default(cuid())
+  userId        String  @unique
+  user          User    @relation(fields: [userId], references: [id])
+  photoKey      String?
+  surname       String
+  firstNames    String
+  preferredName String?
+  dob           DateTime @db.Date
+  sex           String
+  nationalId    String
+  district      String
+  province      String
+
+  passportNumber  String
+  passportCountry String   @default("Zimbabwe")
+  passportIssued  DateTime @db.Date
+  passportExpires DateTime @db.Date
+
+  email    String
+  phoneZw  String
+  phoneRu  String
+  telegram String?
+  whatsapp String?
+
+  scholarshipType   ScholarshipType
+  cohort            Int
+  level             Level
+  scholarshipStatus String
+  scholarshipRef    String?
+
+  universityId   String
+  university     University @relation(fields: [universityId], references: [id])
+  faculty        String
+  programme      String
+  studentNumber  String
+  language       String
+  /// 0 means the preparatory year.
+  stage          Int
+  started        DateTime   @db.Date
+  expectedFinish DateTime   @db.Date
+  academicStatus String
+
+  visaNumber          String
+  visaType            String
+  visaExpiry          DateTime @db.Date
+  migrationCard       String
+  migrationExpiry     DateTime @db.Date
+  registrationAddress String
+  registrationExpiry  DateTime @db.Date
+  housing             String
+  insurer             String
+  policyNumber        String
+  insuranceExpiry     DateTime @db.Date
+
+  kinName       String
+  kinRelation   String
+  kinPhone      String
+  kinTown       String
+  secondName    String?
+  secondPhone   String?
+  russiaContact String?
+  /// Visible to welfare officers only.
+  medical       String?
+
+  consentVersion     String?
+  consentDate        DateTime?
+  emailAnnouncements Boolean   @default(true)
+  onboarded          Boolean   @default(false)
+
+  documents   DocumentVersion[]
+  submissions Submission[]
+  notices     PersonalNotice[]
+  help        HelpRequest[]
+  alerts      EmergencyAlert[]
+  travel      TravelNotice[]
+  graduation  GraduationRecord?
+  nominations Nomination[]      @relation("Candidate")
+  receipts    VoteReceipt[]
+  rsvps       EventRsvp[]
+  reads       AnnouncementRead[]
+
+  @@index([universityId])
+  @@index([cohort])
+}
+
+model GraduationRecord {
+  studentId      String    @id
+  student        Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  expectedFinish DateTime  @db.Date
+  certificateKey String?
+  leaveDate      DateTime  @db.Date
+  zwPhone        String
+  zwTown         String
+  status         String
+  confirmedBy    String?
+  confirmedAt    DateTime?
+}
+
+model DocumentVersion {
+  id         String       @id @default(cuid())
+  studentId  String
+  student    Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  type       String
+  /// Object storage key. Files are never stored in the database.
+  fileKey    String
+  fileName   String
+  issued     DateTime     @db.Date
+  expires    DateTime?    @db.Date
+  uploadedAt DateTime     @default(now())
+  status     ReviewStatus @default(received)
+  reviewer   String?
+  note       String?
+
+  @@index([studentId, type])
+  @@index([status])
+}
+
+model SemesterWindow {
+  id          String       @id @default(cuid())
+  name        String
+  scope       String
+  opens       DateTime
+  deadline    DateTime
+  instruction String
+  posterKey   String?
+  replyDays   Int          @default(7)
+  submissions Submission[]
+}
+
+model Submission {
+  id         String           @id @default(cuid())
+  windowId   String
+  window     SemesterWindow   @relation(fields: [windowId], references: [id])
+  studentId  String
+  student    Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  status     SubmissionStatus @default(draft)
+  outcome    Outcome
+  /// [{ subject, mark? }]
+  arrears    Json             @default("[]")
+  declared   Boolean          @default(false)
+  decidedBy  String?
+  decidedAt  DateTime?
+  files      SubmissionFile[]
+  events     TimelineEvent[]
+  appeal     Appeal?
+
+  @@unique([windowId, studentId])
+  @@index([status])
+}
+
+model SubmissionFile {
+  id           String     @id @default(cuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  fileKey      String
+  name         String
+  at           DateTime   @default(now())
+}
+
+model TimelineEvent {
+  id           String     @id @default(cuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  at           DateTime   @default(now())
+  by           String
+  kind         String
+  text         String?
+}
+
+model Appeal {
+  submissionId String       @id
+  submission   Submission   @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  status       AppealStatus @default(pending)
+  reason       String
+  submittedAt  DateTime     @default(now())
+  officer      String?
+  note         String?
+  decidedAt    DateTime?
+}
+
+model Announcement {
+  id            String             @id @default(cuid())
+  title         String
+  body          String
+  imageKey      String?
+  alt           String?
+  audienceKind  String
+  audienceValue String?
+  at            DateTime           @default(now())
+  by            String
+  reads         AnnouncementRead[]
+}
+
+model AnnouncementRead {
+  announcementId String
+  studentId      String
+  at             DateTime     @default(now())
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  student        Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@id([announcementId, studentId])
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  excerpt     String
+  body        String
+  coverKey    String?
+  alt         String?
+  tag         String
+  at          DateTime @default(now())
+  authorName  String
+  authorTitle String
+  authorPhoto String?
+  isSample    Boolean  @default(false)
+}
+
+model PersonalNotice {
+  id        String   @id @default(cuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  at        DateTime @default(now())
+  title     String
+  body      String
+  kind      String
+  href      String?
+  read      Boolean  @default(false)
+
+  @@index([studentId, read])
+}
+
+model ZisarEvent {
+  id          String      @id @default(cuid())
+  title       String
+  date        DateTime
+  /// A city name or "All cities".
+  city        String
+  description String
+  imageKey    String?
+  alt         String?
+  by          String
+  rsvps       EventRsvp[]
+}
+
+model EventRsvp {
+  eventId   String
+  studentId String
+  event     ZisarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  student   Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@id([eventId, studentId])
+}
+
+model CommitteeSeat {
+  id           String    @id
+  office       String
+  group        String
+  lead         Boolean   @default(false)
+  name         String?
+  photoKey     String?
+  universityId String?
+  city         City?
+  termStart    DateTime? @db.Date
+  termEnd      DateTime? @db.Date
+  note         String
+  contact      String
+  isSample     Boolean   @default(false)
+  updatedBy    String
+  updatedAt    DateTime  @updatedAt
+}
+
+model AssocFile {
+  id         String   @id @default(cuid())
+  kind       String
+  title      String
+  fileKey    String
+  fileName   String
+  uploadedBy String
+  at         DateTime @default(now())
+}
+
+model Election {
+  id               String         @id @default(cuid())
+  title            String
+  status           ElectionStatus @default(draft)
+  quorumPct        Int
+  nominationsClose DateTime
+  votingOpens      DateTime
+  votingCloses     DateTime
+  officerName      String
+  scrutineerName   String
+  publishedAt      DateTime?
+  committeeUpdated Boolean        @default(false)
+  offices          Office[]
+  nominations      Nomination[]
+  roll             VoterRoll[]
+  ballots          Ballot[]
+  receipts         VoteReceipt[]
+}
+
+model Office {
+  id         String     @id @default(cuid())
+  electionId String
+  election   Election   @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  name       String
+  city       City?
+  ballots    Ballot[]
+}
+
+model Nomination {
+  id                String           @id @default(cuid())
+  electionId        String
+  election          Election         @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  studentId         String
+  candidate         Student          @relation("Candidate", fields: [studentId], references: [id])
+  officeId          String
+  statement         String
+  proposerId        String
+  seconderId        String
+  proposerConfirmed Boolean          @default(false)
+  seconderConfirmed Boolean          @default(false)
+  status            NominationStatus @default(pending)
+  reason            String?
+
+  @@unique([electionId, studentId])
+}
+
+/// Who has voted. Deliberately has no link to Ballot.
+model VoterRoll {
+  electionId String
+  studentId  String
+  election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
+
+  @@id([electionId, studentId])
+}
+
+/// One row per office per ballot. No student id, no timestamp finer than the election,
+/// so a choice cannot be joined back to a voter. Written in the same transaction as VoterRoll.
+model Ballot {
+  id          String   @id @default(cuid())
+  electionId  String
+  election    Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  officeId    String
+  office      Office   @relation(fields: [officeId], references: [id], onDelete: Cascade)
+  /// Candidate student id, or "abstain".
+  choice      String
+
+  @@index([electionId, officeId])
+}
+
+model VoteReceipt {
+  electionId String
+  studentId  String
+  code       String   @unique
+  at         DateTime @default(now())
+  election   Election @relation(fields: [electionId], references: [id], onDelete: Cascade)
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@id([electionId, studentId])
+}
+
+model HelpRequest {
+  id        String        @id @default(cuid())
+  studentId String
+  student   Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  city      City
+  phone     String
+  subject   String
+  status    String        @default("open")
+  at        DateTime      @default(now())
+  messages  HelpMessage[]
+}
+
+model HelpMessage {
+  id          String      @id @default(cuid())
+  requestId   String
+  request     HelpRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  by          String
+  fromStudent Boolean
+  at          DateTime    @default(now())
+  text        String
+}
+
+model EmergencyAlert {
+  id         String    @id @default(cuid())
+  studentId  String
+  student    Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  city       City
+  phone      String
+  at         DateTime  @default(now())
+  officers   String[]
+  receivedBy String?
+  receivedAt DateTime?
+}
+
+model TravelNotice {
+  id         String    @id @default(cuid())
+  studentId  String
+  student    Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  leave      DateTime  @db.Date
+  returnDate DateTime  @db.Date
+  reason     String
+  reRegister Boolean
+  status     String    @default("open")
+  closedAt   DateTime?
+}
+
+model Guide {
+  universityId String     @id
+  university   University @relation(fields: [universityId], references: [id])
+  /// [{ title, body }]
+  sections     Json
+  updatedAt    DateTime   @updatedAt
+  updatedBy    String
+}
+
+model MentorPair {
+  id         String   @id @default(cuid())
+  newcomerId String
+  mentorId   String
+  status     String   @default("offered")
+  contact    String?
+  offeredBy  String
+  at         DateTime @default(now())
+}
+
+model Applicant {
+  id             String   @id @default(cuid())
+  surname        String
+  firstNames     String
+  email          String   @unique
+  phoneZw        String
+  province       String
+  district       String
+  followedCities String[]
+  expiresAt      DateTime
+  createdAt      DateTime @default(now())
+  enquiries      CityEnquiry[]
+}
+
+model CityBrief {
+  city      City     @id
+  seatId    String
+  intro     String
+  good      String   @db.Text
+  bad       String   @db.Text
+  ugly      String   @db.Text
+  updatedAt DateTime @updatedAt
+  updatedBy String
+}
+
+model CityArticle {
+  id      String   @id @default(cuid())
+  city    City
+  title   String
+  excerpt String
+  body    String   @db.Text
+  cover   String?
+  at      DateTime @default(now())
+  by      String
+
+  @@index([city, at])
+}
+
+model CityEnquiry {
+  id          String   @id @default(cuid())
+  city        City
+  applicantId String
+  subject     String
+  status      String   @default("open")
+  at          DateTime @default(now())
+  applicant   Applicant @relation(fields: [applicantId], references: [id])
+  messages    CityEnquiryMessage[]
+
+  @@index([city, status])
+  @@index([applicantId])
+}
+
+model CityEnquiryMessage {
+  id            String   @id @default(cuid())
+  enquiryId     String
+  by            String
+  fromApplicant Boolean
+  at            DateTime @default(now())
+  text          String   @db.Text
+  enquiry       CityEnquiry @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+
+  @@index([enquiryId])
+}
+
+/// Append-only. Never records ballot choices.
+model AuditEntry {
+  id     String   @id @default(cuid())
+  at     DateTime @default(now())
+  actor  String
+  role   Role
+  action String
+  target String
+  detail String?
+
+  @@index([at])
+}

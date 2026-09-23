@@ -1,0 +1,26 @@
+# Root
+.DS_Store
+Thumbs.db
+*.pem
+.env*
+.vercel
+
+# Node / Next (portal)
+portal/node_modules/
+portal/.next/
+portal/out/
+portal/build/
+portal/coverage/
+portal/.pnp
+portal/.pnp.*
+portal/.yarn/*
+!portal/.yarn/patches
+!portal/.yarn/plugins
+!portal/.yarn/releases
+!portal/.yarn/versions
+portal/npm-debug.log*
+portal/yarn-debug.log*
+portal/yarn-error.log*
+portal/.pnpm-debug.log*
+portal/*.tsbuildinfo
+portal/next-env.d.ts

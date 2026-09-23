@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Medical insurance drive poster">
+  <rect width="1600" height="900" fill="#0E3B4A"/>
+  <rect x="1180" y="220" width="220" height="460" rx="20" fill="#16586E"/>
+  <rect x="1060" y="340" width="460" height="220" rx="20" fill="#16586E"/>
+  <rect x="1250" y="290" width="80" height="320" rx="10" fill="#FFFFFF"/>
+  <rect x="1130" y="410" width="320" height="80" rx="10" fill="#FFFFFF"/>
+  <text x="120" y="360" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="600" fill="#FDC405" letter-spacing="6">ALL CITIES</text>
+  <text x="120" y="480" font-family="Inter, Arial, sans-serif" font-size="104" font-weight="700" fill="#FFFFFF">Insurance drive</text>
+  <text x="120" y="580" font-family="Inter, Arial, sans-serif" font-size="48" fill="#CDE7EE">Check your policy before it expires</text>
+</svg>

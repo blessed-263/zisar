@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Sports day poster">
+  <rect width="1600" height="900" fill="#FDC405"/>
+  <circle cx="1280" cy="450" r="250" fill="none" stroke="#18181B" stroke-width="18"/>
+  <path d="M1030 450h500M1280 200v500" stroke="#18181B" stroke-width="14"/>
+  <text x="120" y="360" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="600" fill="#243891" letter-spacing="6">ST PETERSBURG</text>
+  <text x="120" y="480" font-family="Inter, Arial, sans-serif" font-size="110" font-weight="700" fill="#18181B">Sports day</text>
+  <text x="120" y="580" font-family="Inter, Arial, sans-serif" font-size="48" fill="#3F3F46">Football, netball, and a braai</text>
+</svg>
