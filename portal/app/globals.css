@@ -310,6 +310,23 @@
 .landing-hero-img {
   animation: hero-zoom 8s var(--ease) both;
 }
+.landing-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 700ms var(--ease),
+    transform 700ms var(--ease);
+}
+.landing-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.landing-photo img {
+  transition: transform 700ms var(--ease);
+}
+.landing-photo:hover img {
+  transform: scale(1.03);
+}
 .anim-sheet-up {
   animation: sheet-up 200ms var(--ease);
 }
@@ -340,6 +357,14 @@
   }
   .landing-hero-img {
     animation: none;
+    transform: none;
+  }
+  .landing-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .landing-photo:hover img {
     transform: none;
   }
 }
